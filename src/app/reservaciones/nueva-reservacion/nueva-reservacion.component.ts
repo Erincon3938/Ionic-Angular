@@ -36,7 +36,7 @@ export class NuevaReservacionComponent implements OnInit {
 
 
 
-      horario: new Date(this.myForm.value['horario']).toLocaleDateString('es-Mx', {weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", hour12: true})
+      horario: new Date(this.myForm.value['horario']).toLocaleDateString('es-Mx', {weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit" , hour12: false}/*  , hour: "2-digit"}*/)
 
     }, 'confirm');
 

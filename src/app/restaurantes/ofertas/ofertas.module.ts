@@ -9,12 +9,16 @@ import { OfertasPageRoutingModule } from './ofertas-routing.module';
 import { OfertasPage } from './ofertas.page';
 
 @NgModule({
+
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     OfertasPageRoutingModule
   ],
+
   declarations: [OfertasPage]
+
 })
+
 export class OfertasPageModule {}

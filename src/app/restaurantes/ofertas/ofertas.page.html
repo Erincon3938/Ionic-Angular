@@ -14,27 +14,36 @@
 
 </ion-header>
 
+
+
 <ion-content>
 
   <ion-grid>
 
     <ion-row>
 
-      <ion-col size="12" size-sm="8" offset-sm="2" text-center>
+
+      <ion-col  size="12" size-sm="8" offset-sm="2" text-center>
 
         <ion-card *ngFor="let oft of ofertas">
 
-          <ion-card-header>
+          <div *ngIf="isloading" style = " text-align : center ;">
 
-            <ion-card-title>{{oft.titulo}}</ion-card-title>
+            <ion-spinner color="primary"></ion-spinner>
+
+          </div>
+
+          <ion-card-header *ngIf="!isloading">
+
+            <ion-card-title >{{oft.titulo}}</ion-card-title>
 
             <ion-card-subtitle>{{oft.subtitulo}}</ion-card-subtitle>
 
           </ion-card-header>
 
-          <ion-img [src]="oft.imgUrl"></ion-img>
+          <ion-img *ngIf="!isloading" [src]="oft.imgUrl"></ion-img>
 
-          <ion-card-content>
+          <ion-card-content *ngIf="!isloading">
 
             <p>{{oft.terminos}}</p>
 

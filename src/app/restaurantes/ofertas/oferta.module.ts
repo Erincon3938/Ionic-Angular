@@ -1,9 +1,13 @@
-export interface Oferta {
+export class Oferta {
 
-  id: number;
-  titulo : string ;
-  subtitulo : string ;
-  imgUrl : string ;
-  terminos : string ;
+  constructor(
+
+    public id: string,
+    public titulo : string ,
+    public subtitulo : string ,
+    public imgUrl : string ,
+    public terminos : string
+
+  ){}
 
 }
