@@ -18,17 +18,23 @@
 
   </div>
 
+  <div *ngIf="!isLoading && reservaciones.length <= 0" class="ion-text-center">
+
+    <h3>No hay reservaciones</h3>
+
+  </div>
+
   <ion-grid *ngIf="!isLoading">
 
     <ion-row>
 
       <ion-col>
 
-        <ion-list *ngFor="let r of reservaciones">
+        <ion-list>
 
-          <ion-item-sliding>
+          <ion-item-sliding *ngFor="let r of reservaciones" #slidingRsv>
 
-            <ion-item>
+            <ion-item [routerLink]="['/', 'reservaciones', r.id]">
 
               <ion-avatar slot="start">
 
@@ -39,7 +45,6 @@
               <ion-label>
 
                 <h2>{{r.restaurante}}</h2>
-
                 <p>{{r.horario}}</p>
 
               </ion-label>
@@ -48,7 +53,7 @@
 
             <ion-item-options>
 
-              <ion-item-option color="danger">
+              <ion-item-option color="danger" (click)="onRemoveReservacion(r.id, slidingRsv)">
 
                 <ion-icon name="trash" slot="icon-only"></ion-icon>
 

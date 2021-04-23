@@ -1,7 +1,8 @@
 import { Subscription } from 'rxjs';
 import { ReservacionService } from './reservacion.service';
-import { Reservacion } from './reservacion.module';
-import { Component, OnInit } from '@angular/core';
+import { Reservacion } from './reservacion.model';
+import { Component, OnInit , OnDestroy } from '@angular/core';
+import { IonItemSliding, LoadingController } from '@ionic/angular'
 
 
 
@@ -21,7 +22,7 @@ export class ReservacionesPage implements OnInit {
   reservacionesSub: Subscription;
   isLoading = false;
 
-  constructor(private reservacionService : ReservacionService) {}
+  constructor(private reservacionService : ReservacionService , private loadingCtrl: LoadingController) {}
 
   ngOnInit() {
 
@@ -53,5 +54,22 @@ export class ReservacionesPage implements OnInit {
 
   }
 
+  onRemoveReservacion(reservacionId: string, slidingEl: IonItemSliding){
+
+    slidingEl.close();
+    this.loadingCtrl.create({
+
+      message: 'eliminando reservación ...'
+
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.reservacionService.removeReservacion(reservacionId).subscribe(() => {
+        loadingEl.dismiss();
+
+      });
+
+    });
+
+  }
 
 }

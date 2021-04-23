@@ -192,8 +192,7 @@ export class RestauranteDetallePage implements OnInit {
           .then(loadignEl => {
 
             loadignEl.present();
-            console.log(resultData);
-            this.reservacionService.addReservacion(resultData.data.restaurante, resultData.data.horario)
+            this.reservacionService.addReservacion(resultData.data.restaurante, resultData.data.nombre, resultData.data.horario)
             loadignEl.dismiss();
 
           });

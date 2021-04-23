@@ -7,7 +7,6 @@
     <ion-buttons slot="primary">
 
       <ion-button (click)="onCancel()">
-
         <ion-icon name="close"></ion-icon>
 
       </ion-button>
@@ -18,12 +17,12 @@
 
 </ion-header>
 
-
 <ion-content class="ion-text-center">
 
   <p>Estas seguro de reservar en {{restaurante.titulo}}?</p>
 
   <form (ngSubmit)="onReservar()" #formNew="ngForm">
+
     <ion-grid>
 
       <ion-row>
@@ -37,6 +36,21 @@
       </ion-row>
 
       <ion-row>
+        <ion-col size="12" class="ion-text-center">
+
+          <ion-item>
+
+            <ion-label position="floating">A nombre de</ion-label>
+
+            <ion-input [ngModel]="Nombre" required name="nombre"></ion-input>
+
+          </ion-item>
+
+        </ion-col>
+
+      </ion-row>
+
+      <ion-row>
 
         <ion-col size="12" class="ion-text-center">
 
@@ -44,7 +58,10 @@
 
             <ion-label position="floating">Fecha</ion-label>
 
-            <ion-datetime display-format="DD MMM YYYY h a" picker-format="DD MMM YYYY h a" monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre" required [ngModel]="fecha" name="horario" ></ion-datetime>
+            <ion-datetime display-format="DD MMM YYYY h a" picker-format="DD MMM YYYY h a" [ngModel]="fecha" required
+              name="horario" [min]="desdeMin">
+
+            </ion-datetime>
 
           </ion-item>
 
@@ -54,13 +71,7 @@
 
     </ion-grid>
 
-
-    <ion-button color="primary" type="submit" [disabled]="!formNew.valid">
-
-      Si, reservar!
-
-    </ion-button>
-
+    <ion-button color="primary" type="submit" [disabled]="!formNew.valid">Si, reservar!</ion-button>
 
   </form>
 
