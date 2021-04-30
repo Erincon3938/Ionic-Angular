@@ -32,6 +32,16 @@ export class ReservacionService {
   private _reservaciones = new BehaviorSubject<Reservacion[]>([]);
   usuarioId = null;
 
+  constructor(private http: HttpClient,private loginService: LoginService) {
+
+    this.loginService.usuarioId.subscribe(usuarioId => {
+
+      this.usuarioId = usuarioId;
+
+    });
+
+  }
+
   get reservaciones() {
 
     return this._reservaciones.asObservable();
@@ -39,6 +49,8 @@ export class ReservacionService {
   }
 
   fetchReservaciones(){
+
+    let url = environment.firebaseURL + 'reservaciones.json?orderBy="usuarioId"&equalTo="'+ this.usuarioId + '"';
 
     return this.http.get<{[key: string] : Reservacion}>(environment.firebaseURL + 'reservaciones.json?orderBy="usuarioId"&equalTo="'+ this.usuarioId + '"')
 
@@ -92,8 +104,7 @@ export class ReservacionService {
 
   removeReservacion(reservacionId: string){
 
-    let url = `${environment.firebaseURL}reservaciones/${reservacionId}.json`;
-    return this.http.delete(url).pipe(switchMap(()=>{
+    return this.http.delete(`${environment.firebaseURL}reservaciones/${reservacionId}.json`).pipe(switchMap(()=>{
 
       return this.reservaciones;
 
@@ -102,6 +113,7 @@ export class ReservacionService {
       this._reservaciones.next(rsvs.filter(r => r.id !== reservacionId))
 
     }))
+
 
   }
 
@@ -136,15 +148,7 @@ export class ReservacionService {
 
   }
 
-  constructor(private http: HttpClient,private loginService: LoginService) {
 
-    this.loginService.usuarioId.subscribe(usuarioId => {
-
-      this.usuarioId = usuarioId;
-
-    });
-
-  }
 
 }
 
