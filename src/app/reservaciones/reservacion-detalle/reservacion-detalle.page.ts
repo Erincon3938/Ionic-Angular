@@ -20,7 +20,7 @@ export class ReservacionDetallePage implements OnInit {
   reservacion: Reservacion;
   reservacionSub : Subscription;
   isLoading = false;
-  
+
   nombre: string;
   @ViewChild('formNew') myForm: NgForm;
 

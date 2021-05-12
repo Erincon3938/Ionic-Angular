@@ -1,6 +1,7 @@
 import { LoginService } from './login/login.service';
-import { Component } from '@angular/core';
+import { Component , } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
 
@@ -11,6 +12,9 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
+  private loginSub: Subscription;
+  private lastState = false;
+
   constructor(
 
     private loginService: LoginService,
@@ -18,11 +22,37 @@ export class AppComponent {
 
   ) {}
 
+  ngOnInit(){
+
+    this.loginSub = this.loginService.usuarioLoggeado.subscribe(isAuth => {
+
+      if(!isAuth && this.lastState !== isAuth) {
+
+        this.router.navigateByUrl('/login');
+
+      }
+
+      this.lastState = isAuth;
+
+    });
+
+  }
+
+  ngOnDestroy() {
+
+    if (this.loginSub){
+
+      this.loginSub.unsubscribe();
+
+    }
+
+  }
+
   onLogout() {
 
     this.loginService.logout();
     this.router.navigateByUrl('/login');
 
   }
-  
+
 }

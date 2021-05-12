@@ -1,8 +1,8 @@
 import { LoginService} from './login.service';
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router'
-import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { Observable , of } from 'rxjs';
+import { switchMap,take, tap } from 'rxjs/operators';
 
 @Injectable({
 
@@ -25,7 +25,25 @@ export class LoginGuard implements CanLoad {
 
       take(1),
 
-      tap(isAuth => {
+      switchMap(isAuth => {
+
+        console.log(this.loginService.usuarioLoggeado);
+
+        if (!isAuth){
+
+          return this.loginService.autoLogin();
+
+        }
+
+        else {
+
+          return of (isAuth);
+
+        }
+
+      }) ,
+
+      tap (isAuth => {
 
         console.log(this.loginService.usuarioLoggeado);
 

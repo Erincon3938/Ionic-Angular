@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Usuario } from './usuario.model';
+import { Plugins } from '@capacitor/core';
 
 
 export interface LoginResponseData {
@@ -58,6 +59,7 @@ export class LoginService {
   logout() {
 
     this._usuario.next(null);
+    Plugins.Storage.remove({key: 'authData'});
 
   }
 
@@ -73,11 +75,33 @@ export class LoginService {
 
   }
 
-  private setUserDate(userData: LoginResponseData){
+  private setUserDate (userData: LoginResponseData) {
 
-    const expTime = new Date(new Date().getTime() + (+userData.expiresIn *1000));
+    const expTime = new Date (
+
+      new Date().getTime() + (+userData.expiresIn * 1000)
+
+
+    );
 
     this._usuario.next(new Usuario(userData.localId, userData.email, userData.idToken, expTime));
+
+    this.storeAuthData(userData.localId, userData.email, userData.idToken, expTime.toISOString());
+
+  }
+
+  private storeAuthData(userId: string, email: string, token: string, tokenExpirationDate: string){
+
+    const data = JSON.stringify({
+
+      userId: userId,
+      email: email,
+      token: token,
+      tokenExpirationDate: tokenExpirationDate
+
+    });
+
+    Plugins.Storage.set({key: 'authData', value: data});
 
   }
 
@@ -108,6 +132,59 @@ export class LoginService {
       }
 
     }));
+
+  }
+
+  autoLogin(){
+
+    return from(Plugins.Storage.get({key: 'authData'})).pipe(map(storedData => {
+
+      if (!storedData || !storedData.value){
+
+        return null;
+
+      }
+
+      const parsedData = JSON.parse(storedData.value) as {
+
+        userId: string,
+        email: string,
+        token: string,
+        tokenExpirationDate: string
+
+      };
+
+      const expTime = new Date(parsedData.tokenExpirationDate);
+
+      if(expTime <= new Date()){
+
+        return null;
+
+      }
+
+      const user = new Usuario(parsedData.userId, parsedData.email, parsedData.token, expTime);
+
+      return user;
+
+    }),
+
+    tap(user => {
+
+      if (user) {
+
+        this._usuario.next(user);
+
+      }
+
+    }),
+
+    map(user => {
+
+      return !!user;
+
+    })
+
+    );
 
   }
 
