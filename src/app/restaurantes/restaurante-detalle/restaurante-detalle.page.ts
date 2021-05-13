@@ -8,6 +8,36 @@ import { ReservacionService } from 'src/app/reservaciones/reservacion.service';
 import { Subscription } from 'rxjs';
 
 
+function base64toBlob(base64Data, contentType){
+
+  contentType = contentType || '';
+  const sliceSize = 1024;
+  const byteCharacters = window.atob(base64Data);
+  const bytesLength = byteCharacters.length;
+  const slicesCount = Math.ceil(bytesLength/sliceSize);
+  const bytesArrays = new Array(slicesCount);
+
+  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex){
+
+    const begin = sliceIndex * sliceSize;
+    const end = Math.min(begin + sliceSize, bytesLength);
+    const bytes = new Array(end - begin);
+
+    for (let offset = begin, i = 0; offset < end; ++i, ++offset){
+
+      bytes[i] = byteCharacters[offset].charCodeAt(0);
+
+    }
+
+    bytesArrays[sliceIndex] = new Uint8Array(bytes);
+
+  }
+
+  return new Blob(bytesArrays, {type: contentType});
+
+ }
+
+
 @Component({
 
  selector: 'app-restaurante-detalle',
@@ -170,39 +200,75 @@ export class RestauranteDetallePage implements OnInit {
 
   }
 
-  openReservarModal(modo: 'select' | 'hoy'){
+  openReservarModal(modo: 'select' | 'hoy') {
 
     this.modalCtrl.create({
 
       component: NuevaReservacionComponent,
 
-      componentProps: {restaurante: this.restaurante, mode: modo}}
+      componentProps: {
 
-      ).then(modalEl => {
+        restaurante: this.restaurante, mode: modo
 
-        modalEl.present();
+      }
 
-        return modalEl.onDidDismiss();
+    }).then(modalEl => {
 
-      }).then(resultData => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
 
-        if (resultData.role === 'confirm') {
 
-          this.loadingCtrl.create({message: 'reservando ...'})
-          .then(loadignEl => {
+    }).then(resultData => {
 
-            loadignEl.present();
-            this.reservacionService.addReservacion(resultData.data.restaurante, resultData.data.nombre, resultData.data.horario)
-            loadignEl.dismiss();
+      if (resultData.role === 'confirm') {
 
-          });
+        this.loadingCtrl.create({message: 'reservando ...'})
 
-        }
+        .then(loadignEl => {
 
-      });
+          loadignEl.present();
 
-      console.log(modo);
+          this.reservacionService.addReservacion(resultData.data.restaurante, resultData.data.nombre, resultData.data.horario)
+          loadignEl.dismiss();
 
+        });
+
+      }
+
+    });
+
+    console.log(modo);
+
+  }
+
+  onImagenSeleccionada(imageData: string | File){
+
+    let imageFile;
+
+
+    if(typeof imageData === 'string'){
+
+      try{
+
+        imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64',''), 'image/jpeg');
+
+      }
+
+      catch(error){
+
+        console.log(error);
+
+        return;
+
+      }
+    }
+
+    else{
+
+      imageData = imageData;
+
+    }
+    
   }
 
 }

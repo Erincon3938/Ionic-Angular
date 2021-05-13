@@ -22,7 +22,7 @@ export class AppComponent {
 
   ) {}
 
-  ngOnInit(){
+  ngOnInit() {
 
     this.loginSub = this.loginService.usuarioLoggeado.subscribe(isAuth => {
 

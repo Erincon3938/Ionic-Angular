@@ -2,12 +2,10 @@ import { NuevaReservacionComponent } from './../../reservaciones/nueva-reservaci
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { RestauranteDetallePageRoutingModule } from './restaurante-detalle-routing.module';
-
 import { RestauranteDetallePage } from './restaurante-detalle.page';
+import { SharedModule } from 'src/app/shared/shared.module' ;
 
 @NgModule({
 
@@ -15,10 +13,12 @@ import { RestauranteDetallePage } from './restaurante-detalle.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    RestauranteDetallePageRoutingModule
+    RestauranteDetallePageRoutingModule ,
+    SharedModule
   ],
 
   declarations: [RestauranteDetallePage , NuevaReservacionComponent]
+  
 })
 
 export class RestauranteDetallePageModule {}
