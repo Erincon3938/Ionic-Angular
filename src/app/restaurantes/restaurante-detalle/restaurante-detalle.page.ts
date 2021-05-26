@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment.prod';
 import { NuevaReservacionComponent } from 'src/app/reservaciones/nueva-reservacion/nueva-reservacion.component';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { RestauranteService } from '../restaurante.service';
 import { ActionSheetController, AlertController, ModalController, LoadingController, NavController} from '@ionic/angular';
 import { ReservacionService } from 'src/app/reservaciones/reservacion.service';
 import { Subscription } from 'rxjs';
+import { MapModalComponent } from 'src/app/shared/map-modal/map-modal.component';
 
 
 function base64toBlob(base64Data, contentType){
@@ -246,15 +248,15 @@ export class RestauranteDetallePage implements OnInit {
     let imageFile;
 
 
-    if(typeof imageData === 'string'){
+    if (typeof imageData === 'string'){
 
-      try{
+      try {
 
         imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64',''), 'image/jpeg');
 
       }
 
-      catch(error){
+      catch (error) {
 
         console.log(error);
 
@@ -263,12 +265,39 @@ export class RestauranteDetallePage implements OnInit {
       }
     }
 
-    else{
+    else {
 
       imageData = imageData;
 
     }
-    
+
+  }
+
+  onMostrarMapa() {
+
+    this.modalCtrl.create({component: MapModalComponent, componentProps:
+
+      {
+
+        center: {
+
+          lat: this.restaurante.lat,
+          lng: this.restaurante.lng
+
+        },
+
+        selectable: true,
+        closeButtonText: 'cerrar',
+        titulo: 'ubicacion'
+
+      }
+
+    }).then(modalEl => {
+
+      modalEl.present();
+
+    });
+
   }
 
 }

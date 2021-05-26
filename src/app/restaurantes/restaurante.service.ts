@@ -33,6 +33,19 @@ export class RestauranteService {
 
   private _restaurantes = new BehaviorSubject<Restaurante[]>([]);
 
+  /*private restaurantes : Restaurante[] = [
+
+    { id: null , titulo : 'Carls Jr' ,platillos : ['Hamburguesas', 'Ensaladas', 'Helados'] , imgUrl:'https://frankata.com/wp-content/uploads/2019/01/800x600carlsjr-1170x877.jpg' , lat : 25 , lng : 34 , getStaticMap()} ,
+
+    { id: null ,titulo: 'Cabo Grill',platillos: ['Ceviche' , 'Filete de pescado', 'Tacos de mariscos'],imgUrl:'https://i.pinimg.com/280x280_RS/e3/1e/e7/e31ee7950607eb55c87e199fd5ab6dd7.jpg' , lat : 25 , lng : 34 , getStaticMap() },
+
+    { id: null ,titulo: 'Super Salads',platillos: ['Ensaladas', 'Wraps', 'Paninis'],imgUrl:'https://cdn.worldvectorlogo.com/logos/super-salads.svg' , lat : 25 , lng : 34 , getStaticMap() } ,
+
+    { id: null ,titulo: 'Little Caesars Pizza',platillos: ['Pizza', 'Spaguetti', 'Crazy Bread'],imgUrl:'https://cdn.worldvectorlogo.com/logos/little-caesars-pizza-2.svg' , lat : 25 , lng : 34 , getStaticMap() }
+
+
+  ] ;*/
+
 
 
   get restaurantes(){
@@ -62,7 +75,7 @@ export class RestauranteService {
 
         if (dta.hasOwnProperty(key)){
 
-          rests.push( new Restaurante(key, dta[key].titulo, dta[key].imgUrl, dta[key].platillos));
+          rests.push( new Restaurante(key, dta[key].titulo, dta[key].imgUrl, dta[key].platillos , dta[key].lat , dta[key].lng));
 
         }
 
@@ -84,7 +97,7 @@ export class RestauranteService {
 
     const url = environment.firebaseURL + `restaurantes/${restauranteId}.json`;return this.http.get<Restaurante>(url).pipe(map(dta => {
 
-      return new Restaurante(restauranteId, dta.titulo, dta.imgUrl, dta.platillos);
+      return new Restaurante(restauranteId, dta.titulo, dta.imgUrl, dta.platillos, dta.lat , dta.lng);
 
     }));
 
